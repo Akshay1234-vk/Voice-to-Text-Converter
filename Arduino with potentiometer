@@ -1,0 +1,64 @@
+// Including the LCD and Bluetooth Libraries
+#include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
+
+// Defining the pins of LCD and Bluetooth
+LiquidCrystal lcd (2, 3, 4, 5, 6, 7);
+SoftwareSerial mySerial (10, 11);   
+
+// Printings when no Data Received
+String val = "No Data";
+String oldval;
+String newval = "No Data";
+int i = 0;
+
+void setup() 
+{
+
+
+  // Starting Serial Communication and Starting up LCD Display
+  lcd.begin(16,2);
+  mySerial.begin(9600);
+  Serial.begin(9600);
+
+ // Printing Initial Texts
+  lcd.setCursor(0, 0);
+  lcd.print("Wireless Notice");
+  lcd.setCursor(0, 1);
+  lcd.print("Board");
+  delay(3000);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Akshay's ");
+  lcd.setCursor(0, 1);
+  lcd.print("        Robotics");
+  delay(3000);
+}
+
+void loop() 
+{
+ // Reading data received via Bluetooth
+  val = mySerial.readString();
+  // Removing unwanted Data
+  val.trim();
+ // Printing the data on the Serial Monitor
+  Serial.println(val);
+
+
+  if(val != oldval)
+  {
+    newval = val;
+  }
+
+// Printing value on the LCD Display
+  lcd.clear();
+  lcd.setCursor(i, 0);
+  lcd.print(newval);
+  i++;
+  
+  if(i >= 15)
+  {
+    i = 0; 
+  }
+  val = oldval;
+}
